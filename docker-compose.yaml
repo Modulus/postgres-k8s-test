@@ -29,13 +29,18 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment: 
-      DATABASE_URL: postgresql://user:user@postgres:5432/user
+      DATABASE_USER: user
+      DATABASE_PASSWORD: user
+      DATABASE_SERVER: postgres
+      DATABASE_NAME: postgres
+
+      # postgresql://user:user@postgres:5432/user
     depends_on:
       - postgres
     networks:
       - k8s-postgres-test
     ports:
-      - "5000:5000"
+      - "5001:5000"
 
 networks:
   k8s-postgres-test:

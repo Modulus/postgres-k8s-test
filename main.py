@@ -2,6 +2,8 @@
 import logging
 import os
 import sys
+from urllib.parse import quote_plus
+
 from time import gmtime, strftime, sleep, time
 
 from flask import Flask, json, jsonify
@@ -24,7 +26,16 @@ logger.info("Starting server")
 @app.route('/')
 def hello_world():
     try:
-        db_url = os.environ["DATABASE_URL"]
+        db_user = os.environ["DATABASE_USER"]
+        db_pass = os.environ["DATABASE_PASSWORD"]
+        db_server = os.environ["DATABASE_SERVER"]
+        db_name = os.environ["DATABASE_NAME"]
+
+        quote_pass = quote_plus(db_pass)
+
+        db_url = f"postgresql://{db_server}:5432/{db_name}?user={db_user}&password={quote_pass}&sslmode=require"
+
+
         logger.info(f"Connection to {db_url}")
         connection = psycopg2.connect(db_url)
 
