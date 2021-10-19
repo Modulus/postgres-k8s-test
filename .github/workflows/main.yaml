@@ -1,0 +1,26 @@
+name: Main
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  package:
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: actions/checkout@v2
+      - name: login
+        uses: docker/login-action@v1
+        with: 
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      - name: Docker build producer
+        run: docker build -t ghcr.io/modulus/postgres-k8s-test:latest -f Dockerfile .
+      # - name: Docker push
+      #   run: docker push ghcr.io/modulus/postgres-k8s-test:latest 
