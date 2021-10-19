@@ -36,7 +36,7 @@ def hello_world():
         db_url = f"postgresql://{db_server}:5432/{db_name}?user={db_user}&password={quote_pass}&sslmode=require"
 
 
-        logger.info(f"Connection to {db_url}")
+        logger.debug(f"Connection to {db_url}")
         connection = psycopg2.connect(db_url)
 
         cursor = connection.cursor()
