@@ -1,0 +1,42 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13.1
+    container_name: postgres
+    # volumes:
+    #   - /tmp/postgres_data_users/:/var/lib/postgresql/data
+    #   - ${PWD}/db/:/tmp/
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: user
+      POSTGRES_PASSWORD: user
+    # command: postgres -c 'max_connections=10'
+    networks:
+      - k8s-postgres-test
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8090:8080
+    networks:
+      - k8s-postgres-test
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment: 
+      DATABASE_URL: postgresql://user:user@postgres:5432/user
+    depends_on:
+      - postgres
+    networks:
+      - k8s-postgres-test
+    ports:
+      - "5000:5000"
+
+networks:
+  k8s-postgres-test:
+    driver: bridge
